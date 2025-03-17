@@ -1,0 +1,124 @@
+<div class="p-5 max-h-[80vh] overflow-y-auto">
+  <h2 class="text-xl font-medium mb-4 text-center">
+    {{ riwayat.id ? 'Edit Riwayat' : 'Tambah Riwayat' }}
+  </h2>
+
+  <div class="w-full mb-4">
+      <label for="tanggal">Tanggal Selesai:</label>
+      <input type="date" id="tanggal" [(ngModel)]="riwayat.tanggal" class="border p-2 w-full" required />
+  </div>
+
+  <div class="w-full mb-4">
+      <label for="keluhan">Keluhan:</label>
+      <textarea id="keluhan" [(ngModel)]="riwayat.keluhan" class="border p-2 w-full bg-gray-100" readonly></textarea>
+  </div>
+
+  <div class="w-full mb-4">
+      <label for="penanganan">Penanganan:</label>
+      <textarea id="penanganan" [(ngModel)]="riwayat.penanganan" class="border p-2 w-full"></textarea>
+  </div>
+
+  <div class="w-full mb-4">
+      <label for="catatan">Catatan:</label>
+      <textarea id="catatan" [(ngModel)]="riwayat.catatan" class="border p-2 w-full"></textarea>
+  </div>
+
+  <div class="flex gap-2">
+      <div class="w-full mb-4">
+          <label for="kendaraan">No Polisi:</label>
+          <select id="kendaraan" [(ngModel)]="riwayat.id_kendaraan" (change)="onKendaraanChange(riwayat.id_kendaraan)" class="border p-2 w-full">
+              <option *ngFor="let kendaraan of kendaraanList" [value]="kendaraan.id">
+                  {{ kendaraan.nopol }}
+              </option>
+          </select>
+      </div>
+
+      <div class="w-full mb-4">
+          <label for="namaPelanggan">Nama Pelanggan:</label>
+          <input type="text" id="namaPelanggan" [(ngModel)]="riwayat.nama_pelanggan" class="border p-2 w-full bg-gray-100" readonly />
+      </div>
+  </div>
+
+  <div class="mb-4">
+      <label for="karyawan" class="block text-sm font-medium text-gray-700">Pilih Karyawan</label>
+      <select id="karyawan" [(ngModel)]="riwayat.id_karyawan" class="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+          <option *ngFor="let karyawan of karyawanList" [value]="karyawan.id">
+              {{ karyawan.nama }}
+          </option>
+      </select>
+  </div>
+
+  <div class="flex gap-2">
+      <div class="w-full mb-4">
+          <label for="jenisJasa">Jenis Jasa:</label>
+          <select id="jenisJasa" [(ngModel)]="riwayat.id_jasa" (change)="onJasaChange()" class="border p-2 w-full">
+              <option *ngFor="let jasa of jasaList" [value]="jasa.id">{{ jasa.jenis }}</option>
+          </select>
+      </div>
+
+      <div class="w-full mb-4">
+          <label for="hargaJasa">Harga Jasa:</label>
+          <input type="text" id="hargaJasa" [(ngModel)]="riwayat.harga_jasa" class="border p-2 w-full bg-gray-100" readonly />
+      </div>
+  </div>
+
+  <div class=" gap-2">
+
+<div *ngFor="let sp of sparepartsForm; let i = index" class="flex flex-wrap gap-2 mb-4">
+    <div class="w-full sm:w-1/3">
+      <label for="sparepart-{{i}}">Sparepart:</label>
+      <select id="sparepart-{{i}}" [(ngModel)]="sp.id_sparepart" (change)="onSparepartChange(i)" class="border p-2 w-full">
+        <option value="" disabled>Pilih Sparepart</option>
+        <option *ngFor="let sparepart of sparepartList" [value]="sparepart.id" [disabled]="sparepart.jumlah === 0">
+          {{ sparepart.nama }} - Stock: {{ sparepart.jumlah }}
+        </option>
+      </select>
+    </div>
+  
+    <div class="w-full sm:w-1/4">
+      <label for="jumlah-{{i}}">Jumlah:</label>
+      <input type="number" id="jumlah-{{i}}" [(ngModel)]="sp.jumlah_sparepart" min="1" (change)="updateTotalHarga()" class="border p-2 w-full" />
+    </div>
+  
+    <div class="w-full sm:w-1/4">
+      <label for="hargaSparepart-{{i}}">Harga Sparepart:</label>
+      <input type="text" id="hargaSparepart-{{i}}" [(ngModel)]="sp.harga_sparepart" class="border p-2 w-full bg-gray-100" readonly />
+    </div>
+  
+    <div class="flex items-end">
+      <button type="button" (click)="removeSparepartRow(i)" class="bg-red-500 text-white p-2 rounded-md" *ngIf="sparepartsForm.length > 1">
+        Hapus
+      </button>
+    </div>
+  </div>
+
+  <button type="button" (click)="addSparepartRow()" class="bg-green-500 text-white p-2 rounded-md mb-4">
+    Tambah Sparepart
+  </button>
+  
+  </div>
+
+  <div class="flex gap-2">
+
+      <div class="w-full mb-4">
+          <label for="total">Total Harga:</label>
+          <input type="text" id="total" [(ngModel)]="riwayat.total_harga" class="border p-2 w-full bg-gray-100" readonly />
+      </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="status">Status:</label>
+    <select id="status" [(ngModel)]="riwayat.status" class="border p-2 w-full">
+      <option value="tunggu">Tunggu</option>
+      <option value="setuju">Setuju</option>
+      <option value="belum di kerjakan">Belum Di Kerjakan</option>
+      <option value="di kerjakan">Di Kerjakan</option>
+      <option value="selesai">Selesai</option>
+    </select>
+  </div>
+
+  <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+  </div>
+</div>

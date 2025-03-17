@@ -1,0 +1,99 @@
+<div class="border border-gray-500 rounded-xl m-4 p-4">
+  <div>
+    <p class="bold text-2xl mt-4 mb-4 text-center font-medium">Daftar Pelanggan</p>
+
+    <div class="flex flex-col sm:flex-row justify-between mb-4">
+      <div class="sm:w-1/2 w-full">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Cari Nama Karyawan..."
+          class="border p-3 rounded-md h-  sm:w-1/3"
+        />
+      </div>
+        <button
+          class="bg-gray-500 text-white p-3 rounded-md mb-4 flex gap-2 hover:bg-gray-300 hover:text-black"
+          (click)="tambahPelanggan()"
+        ><mat-icon>add_circle</mat-icon>
+          Tambah Data
+        </button>
+    </div>
+
+    <div class="sm:overflow-none overflow-auto">
+      <table
+        class="border w-full rounded-lg "
+      >
+        <tr>
+          <th class="border-collapse border font-medium p-2">Id</th>
+          <th class="border-collapse border font-medium p-2">KTP</th>
+          <th class="border-collapse border font-medium p-2">Email</th>
+          <th class="border-collapse border font-medium p-2">Nama</th>
+          <th class="border-collapse border font-medium p-2">Alamat</th>
+          <th class="border-collapse border font-medium p-2">No HP</th>
+          <th class="border-collapse border font-medium p-2">Foto</th>
+          <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
+        </tr>
+
+        <tr class="text-center" *ngFor="let pelanggan of filteredData(); let i = index">
+          <td class="border-collapse border p-2">{{ pelanggan.id }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.ktp }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.email }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.nama }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.alamat }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.no_hp }}</td>
+          <td class="border-collapse border p-2">{{ pelanggan.foto }}</td>
+          <td class="border-collapse border p-2">
+            <div class="flex justify-center gap-3 sm:flex-row flex-col">
+              <button
+                class="bg-green-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-green-400"
+                (click)="editPelanggan(pelanggan)"
+              >
+                <mat-icon>edit</mat-icon><span></span>
+              </button>
+
+              <button
+                class="bg-red-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-red-400"
+                (click)="hapusPelanggan(pelanggan.id)"
+              >
+                <mat-icon class="text-center"><span>delete</span></mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <span class="p-2 text-sm">
+      Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ pelangganList.length }} data
+    </span>
+    <div class="flex gap-2">
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+      </button>
+  
+
+      <button
+        *ngFor="let page of getPages()"
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+  
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages()"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+</div>

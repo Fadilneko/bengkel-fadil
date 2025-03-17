@@ -1,0 +1,104 @@
+
+<div class="bg-blue-600 text-white p-4 flex items-center justify-between">
+
+  <div class="flex items-center gap-4">
+    <span class="font-bold text-xl">Neko Bengkel</span>
+  </div>
+  
+
+  <div class="hidden md:flex gap-4">
+    <a [routerLink]="['dashboard-admin']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>home</mat-icon>Dashboard
+    </a>
+    <a [routerLink]="['table-pelanggan']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>people</mat-icon>Pelanggan
+    </a>
+    <a *ngIf="role === 1" [routerLink]="['table-karyawan']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>group</mat-icon>Karyawan
+    </a>
+    <a [routerLink]="['table-kendaraan']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>motorcycle</mat-icon>Kendaraan
+    </a>
+    <a [routerLink]="['table-sparepart']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>shopping_cart</mat-icon>Sparepart
+    </a>
+    <a [routerLink]="['table-jasa-service']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>build</mat-icon>Jasa Service
+    </a>
+    <a [routerLink]="['table-booking']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>today</mat-icon>Booking
+    </a>
+    <a [routerLink]="['table-riwayat']" class="flex gap-1 items-center hover:text-gray-200">
+      <mat-icon>access_time</mat-icon>Riwayat
+    </a>
+  </div>
+  
+
+  <div class="flex md:hidden items-center gap-2">
+    <button (click)="toggleSidebar()" class="focus:outline-none">
+      <mat-icon>menu</mat-icon>
+    </button>
+   
+    <button (click)="toggleMobileDropdown()" class="focus:outline-none">
+      <div class="bg-white w-8 h-8 rounded-full overflow-hidden">
+        <img *ngIf="karyawan?.foto" [src]="'assets/' + karyawan.foto" alt="Profile" class="object-cover w-full h-full" />
+        <mat-icon *ngIf="!karyawan?.foto" class="w-full h-full flex items-center justify-center">person</mat-icon>
+      </div>
+    </button>
+ 
+    <div *ngIf="mobileDropdownOpen" class="absolute right-4 top-16 bg-white text-black rounded shadow-lg z-50 w-40">
+      <a [routerLink]="['profile']" (click)="mobileDropdownOpen = false" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+      <button (click)="logout(); mobileDropdownOpen = false" class="w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
+    </div>
+  </div>
+  
+  
+  <div class="hidden md:flex items-center gap-2 relative">
+    <button (click)="toggleDropdown()" class="flex items-center gap-2 focus:outline-none">
+      <span *ngIf="karyawan; else showUser" class="font-medium">{{ karyawan.nama }}</span>
+      <ng-template #showUser>
+        <span *ngIf="user" class="font-medium">{{ user.nama }}</span>
+      </ng-template>
+      <div class="bg-white w-10 h-10 rounded-full overflow-hidden">
+        <img *ngIf="karyawan?.foto" [src]="'assets/' + karyawan.foto" alt="Profile" class="object-cover w-full h-full" />
+        <mat-icon *ngIf="!karyawan?.foto" class="w-full h-full flex items-center justify-center">person</mat-icon>
+      </div>
+    </button>
+    <div *ngIf="dropdownOpen" class="absolute right-0 mt-32 w-40 bg-white text-black rounded shadow-lg z-50">
+      <a [routerLink]="['profile']" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+      <button (click)="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="sidebarOpen" class="fixed inset-0 bg-black bg-opacity-50 z-40" (click)="toggleSidebar()"></div>
+
+
+<div class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white z-50 transform transition-transform duration-300" 
+     [ngClass]="{'-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen}">
+  <div class="p-4 flex items-center justify-between border-b border-blue-400">
+    <span class="font-bold text-xl">Menu</span>
+    <button (click)="toggleSidebar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <nav class="p-4 space-y-2">
+    <a [routerLink]="['dashboard-admin']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Dashboard</a>
+    <a [routerLink]="['table-pelanggan']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Pelanggan</a>
+    <a *ngIf="role === 1" [routerLink]="['table-karyawan']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Karyawan</a>
+    <a [routerLink]="['table-kendaraan']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Kendaraan</a>
+    <a [routerLink]="['table-sparepart']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Sparepart</a>
+    <a [routerLink]="['table-jasa-service']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Jasa Service</a>
+    <a [routerLink]="['table-booking']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Booking</a>
+    <a [routerLink]="['table-riwayat']" (click)="toggleSidebar()" class="block px-2 py-1 hover:bg-blue-500">Riwayat</a>
+  </nav>
+  <div class="p-4 border-t border-blue-400">
+    <div class="flex items-center gap-2">
+      <img *ngIf="karyawan?.foto" [src]="'assets/' + karyawan.foto" alt="Profile" class="w-10 h-10 rounded-full object-cover" />
+      <mat-icon *ngIf="!karyawan?.foto" class="w-10 h-10">person</mat-icon>
+      <span class="font-medium">{{ karyawan?.nama || user?.nama }}</span>
+    </div>
+    <button (click)="logout()" class="mt-2 w-full text-left px-2 py-1 hover:bg-blue-500">Logout</button>
+  </div>
+</div>

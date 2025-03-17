@@ -1,0 +1,119 @@
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto">
+    <p class="text-2xl text-center font-semibold text-gray-800 mb-4">
+      {{ isEditMode ? 'Edit Kendaraan' : 'Tambah Kendaraan' }}
+    </p>
+  
+    <form (ngSubmit)="onSave()" class="space-y-4">
+      <div class="flex gap-2">
+      <div class="w-full">
+        <label for="nopol" class="block text-gray-700 font-medium">Nomor Polisi</label>
+        <input
+          id="nopol"
+          type="text"
+          [(ngModel)]="motor.nopol"
+          name="nopol"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Masukkan nomor polisi"
+          required
+        />
+      </div>
+ 
+      <div class="w-full">
+        <label for="merek" class="block text-gray-700 font-medium">Merek</label>
+        <input
+          id="merek"
+          type="text"
+          [(ngModel)]="motor.merek"
+          name="merek"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Masukkan merek kendaraan"
+          required
+        />
+      </div>
+
+    </div>
+  
+     <div class="flex gap-2">
+      <div class="w-full">
+        <label for="tipe" class="block text-gray-700 font-medium">Tipe</label>
+        <input
+          id="tipe"
+          type="text"
+          [(ngModel)]="motor.tipe"
+          name="tipe"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Masukkan tipe kendaraan"
+          required
+        />
+      </div>
+  
+      <div class="w-full">
+        <label for="transmisi" class="block text-gray-700 font-medium">Transmisi</label>
+        <select
+          id="transmisi"
+          [(ngModel)]="motor.transmisi"
+          name="transmisi"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          required
+        >
+          <option value="" disabled selected>Pilih transmisi</option>
+          <option value="manual">Manual</option>
+          <option value="automatic">Automatic</option>
+        </select>
+      </div>
+
+    </div>
+  
+      <div class="flex gap-2">
+      <div class="w-full">
+        <label for="kapasitas_cc" class="block text-gray-700 font-medium">Kapasitas CC</label>
+        <input
+          id="kapasitas_cc"
+          type="number"
+          [(ngModel)]="motor.kapasitas_cc"
+          name="kapasitas_cc"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Masukkan kapasitas CC"
+          required
+        />
+      </div>
+  
+   
+      <div class="w-full">
+        <label for="tahun" class="block text-gray-700 font-medium">Tahun</label>
+        <input
+          id="tahun"
+          type="number"
+          [(ngModel)]="motor.tahun"
+          name="tahun"
+          class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
+          placeholder="Masukkan tahun kendaraan"
+          required
+        />
+      </div>
+    </div>
+  
+    
+      <div class="flex justify-end space-x-4">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+        >
+          Batal
+        </button>
+        <button
+          type="submit"
+          [disabled]="!motor.nopol || !motor.merek || !motor.transmisi || !motor.kapasitas_cc || !motor.tahun"
+          class="py-2 px-4 rounded-lg text-white"
+          [ngClass]="{
+            'bg-blue-500 hover:bg-blue-600': motor.nopol && motor.merek && motor.transmisi && motor.kapasitas_cc && motor.tahun,
+            'bg-gray-300 cursor-not-allowed': !motor.nopol || !motor.merek || !motor.transmisi || !motor.kapasitas_cc || !motor.tahun
+          }"
+        >
+          {{ isEditMode ? 'Simpan' : 'Tambah' }}
+        </button>
+      </div>
+    </form>
+  </div>
+  

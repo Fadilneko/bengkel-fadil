@@ -1,0 +1,50 @@
+<header class="bg-black p-4 flex justify-between items-center sticky top-0 z-10 border-b-2 border-transparent">
+ 
+  <span class="font-bold text-white text-xl">Neko Bengkel</span>
+
+  
+  <nav class="hidden md:flex gap-8">
+    <button [routerLink]="['dashboard-pelanggan']" routerLinkActive="active-header" class="text-white flex gap-1" (click)="closeDropdown()">
+      <mat-icon>home</mat-icon> Home
+    </button>
+    <button [routerLink]="['booking']" routerLinkActive="active-header" class="text-white flex gap-1" (click)="closeDropdown()">
+      <mat-icon>today</mat-icon> Jadwal Booking
+    </button>
+    <button [routerLink]="['riwayat']" routerLinkActive="active-header" class="text-white flex gap-1" (click)="closeDropdown()">
+      <mat-icon>today</mat-icon> Daftar Service
+    </button>
+  </nav>
+
+ 
+  <div class="relative">
+    <button class="flex items-center gap-4" (click)="toggleDropdown($event)">
+      <span *ngIf="pelanggan?.nama" class="text-white font-medium">{{ pelanggan?.nama }}</span>
+      <div class="bg-white w-12 h-12 rounded-full flex justify-center items-center">
+        <img *ngIf="pelanggan?.foto" [src]="'assets/' + pelanggan?.foto" alt="Profile" class="object-cover w-full h-full rounded-full" />
+        <mat-icon *ngIf="!pelanggan?.foto">person</mat-icon>
+      </div>
+    </button>
+    
+    <div *ngIf="dropdownOpen" class="absolute right-0 bg-white shadow-md rounded-md mt-2 p-2 w-40">
+      <button class="block w-full text-left p-2 hover:bg-gray-100" [routerLink]="['profile']" (click)="closeDropdown()">Profile</button>
+      <button class="block w-full text-left p-2 hover:bg-gray-100" (click)="logout(); closeDropdown()">Logout</button>
+    </div>
+  </div>
+</header>
+
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-96 bg-black p-2 flex justify-around md:hidden z-10 border-t-2 border-transparent rounded-t-lg">
+  <a routerLink="dashboard-pelanggan" routerLinkActive="active-link" class="text-white flex flex-col items-center p-2 transition">
+    <mat-icon>home</mat-icon>
+    <span class="text-xs">Dashboard</span>
+  </a>
+  <a routerLink="booking" routerLinkActive="active-link" class="text-white flex flex-col items-center p-2 transition">
+    <mat-icon>today</mat-icon>
+    <span class="text-xs">Booking</span>
+  </a>
+  <a routerLink="riwayat" routerLinkActive="active-link" class="text-white flex flex-col items-center p-2 transition">
+    <mat-icon>today</mat-icon>
+    <span class="text-xs">Daftar Service</span>
+  </a>
+</nav>
+
+

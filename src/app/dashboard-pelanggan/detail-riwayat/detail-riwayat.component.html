@@ -1,0 +1,90 @@
+<div class="p-6 bg-gray-800 text-white w-full max-w-lg relative shadow-lg">
+
+  <button (click)="closeDialog()" class="absolute top-2 left-2 text-white hover:text-red-500">
+    <mat-icon>close</mat-icon>
+  </button>
+
+ 
+  <div class="text-center border-b border-gray-600 pb-3">
+    <h2 class="text-2xl font-bold">Detail Service</h2>
+    <p class="text-sm">Tanggal Selesai: <span class="font-medium">{{ riwayat.tanggal }}</span></p>
+  </div>
+
+ 
+  <div class="mt-4 flex justify-between">
+    <div>
+      <h3 class="text-lg font-medium">Informasi Pelanggan</h3>
+      <p class="text-sm">Nama: <span class="font-medium">{{ riwayat.kendaraan.pelanggan.nama }}</span></p>
+      <p class="text-sm">KTP: <span class="font-medium">{{ riwayat.kendaraan.pelanggan.ktp || '-' }}</span></p>
+    </div>
+    <div>
+      <h3 class="text-lg font-medium">Informasi Teknisi</h3>
+      <p class="text-sm">Nama: <span class="font-medium">{{ riwayat.karyawan.nama }}</span></p>
+    </div>
+  </div>
+
+ 
+  <div class="mt-4 border-t border-gray-600 pt-3">
+    <h3 class="text-lg font-medium">Detail Kendaraan</h3>
+    <p class="text-sm">No Polisi: <span class="font-medium">{{ riwayat.kendaraan.nopol }}</span></p>
+    <p class="text-sm">Merek: <span class="font-medium">{{ riwayat.kendaraan.merek }}</span></p>
+    <p class="text-sm">Jenis Service: <span class="font-medium">{{ riwayat.jasa.jenis }}</span></p>
+    <p class="text-sm">Keluhan: <span class="font-medium">{{ riwayat.keluhan }}</span></p>
+    <p class="text-sm">Penanganan: <span class="font-medium">{{ riwayat.penanganan || '-' }}</span></p>
+    <p class="text-sm">Catatan: <span class="font-medium">{{ riwayat.catatan || '-' }}</span></p>
+  </div>
+
+
+  <div class="w-full h-0.5 bg-gray-500 my-4"></div>
+
+  
+  <h3 class="text-lg font-medium">Detail Sparepart</h3>
+<table class="w-full mt-2 border-collapse border border-gray-600 text-sm">
+  <thead>
+    <tr class="bg-gray-700">
+      <th class="border border-gray-600 p-2 text-left">Nama Sparepart</th>
+      <th class="border border-gray-600 p-2 text-right">Harga</th>
+      <th class="border border-gray-600 p-2 text-center">Jumlah</th>
+      <th class="border border-gray-600 p-2 text-right">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let sp of riwayat.spareparts" class="bg-gray-900">
+      <td class="border border-gray-600 p-2">{{ sp.nama || '-' }}</td>
+      <td class="border border-gray-600 p-2 text-right">
+        Rp {{ sp.riwayat_sparepart?.harga_jual?.toLocaleString() || '0' }}
+      </td>
+      <td class="border border-gray-600 p-2 text-center">
+        {{ sp.riwayat_sparepart?.jumlah_sparepart || '0' }}
+      </td>
+      <td class="border border-gray-600 p-2 text-right">
+        Rp {{ (sp.riwayat_sparepart?.harga_jual * sp.riwayat_sparepart?.jumlah_sparepart).toLocaleString() || '0' }}
+      </td>
+    </tr>
+    <tr *ngIf="!riwayat.spareparts?.length">
+      <td colspan="4" class="border border-gray-600 p-2 text-center">Tidak ada sparepart</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="text-right mt-4">
+  <p class="text-sm">
+    Harga Service: Rp. <span class="font-medium">
+      {{ riwayat.jasa.harga?.toLocaleString() || '0' }}
+    </span>
+  </p>
+  <p class="text-sm font-medium">
+    Subtotal Sparepart: Rp {{ getSubtotalSparepart().toLocaleString() }}
+  </p>
+</div>
+
+
+<div class="w-full h-0.5 bg-gray-500 my-4"></div>
+
+<div class="mt-4 text-right">
+  
+  <p class="text-xl font-bold">
+    Total Pembayaran: Rp {{ riwayat.total_harga?.toLocaleString() || '0' }}
+  </p>
+</div>
+

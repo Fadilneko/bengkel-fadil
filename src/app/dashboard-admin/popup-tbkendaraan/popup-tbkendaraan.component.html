@@ -1,0 +1,53 @@
+<div class="p-5">
+
+    <h2 class="text-xl font-medium mb-4 text-center">{{ kendaraan.id ? 'Edit kendaraan' : 'Tambah kendaraan' }}</h2>
+
+    <div class="flex gap-4 mb-4">
+    
+    <div class="w-full">
+      <label>Nopol:</label>
+      <input type="number" [(ngModel)]="kendaraan.nopol" class="border p-2 w-full">
+    </div>
+
+    <div class="w-full">
+        <label>Merek:</label>
+        <input type="text" [(ngModel)]="kendaraan.merek" class="border p-2 w-full">
+      </div>
+
+    </div>
+
+    <div class="flex gap-4 mb-4">
+    
+    <div class="w-full">
+        <label>Tipe:</label>
+        <input type="text" [(ngModel)]="kendaraan.tipe" class="border p-2 w-full">
+      </div>
+    
+      <div class="w-full">
+        <label>Transmisi:</label>
+        <input type="text" [(ngModel)]="kendaraan.transmisi" class="border p-2 w-full">
+      </div>
+
+    </div>
+
+    <div class="flex gap-4 mb-4">
+    
+      <div class="w-full">
+        <label>Kapasitas CC:</label>
+        <input type="number" [(ngModel)]="kendaraan.kapasitas_cc" class="border p-2 w-full">
+      </div>
+
+      <div class="w-full">
+        <label>Tahun:</label>
+        <input type="number" [(ngModel)]="kendaraan.tahun" class="border p-2 w-full">
+      </div>
+
+    </div>
+    
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+    </div>
+    
+    </div>
+    

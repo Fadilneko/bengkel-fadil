@@ -1,0 +1,39 @@
+<div class="p-5">
+    <h2 class="text-xl font-medium mb-4 text-center">Lengkapi Profile Anda</h2>
+  
+    <div class="flex justify-center mb-4">
+      <label class="cursor-pointer relative">
+        <input type="file" (change)="onFileSelected($event)" class="hidden">
+        <img 
+          [src]="previewImage || ''" 
+          
+          class="w-32 h-32 object-cover rounded-full border-2 border-gray-300 shadow-md hover:opacity-75 transition">
+      </label>
+    </div>
+
+    <div class="mb-4">
+        <label>KTP:</label>
+        <input type="number" [(ngModel)]="pelanggan.ktp" class="border p-2 w-full">
+      </div>
+  
+    <div class="mb-4">
+      <label>Nama:</label>
+      <input type="text" [(ngModel)]="pelanggan.nama" class="border p-2 w-full">
+    </div>
+  
+    <div class="mb-4">
+      <label>Alamat:</label>
+      <input type="text" [(ngModel)]="pelanggan.alamat" class="border p-2 w-full">
+    </div>
+  
+    <div class="mb-4">
+      <label>No HP:</label>
+      <input type="number" [(ngModel)]="pelanggan.hp" class="border p-2 w-full">
+    </div>
+  
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+    </div>
+  </div>
+  

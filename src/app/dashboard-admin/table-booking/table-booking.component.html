@@ -1,0 +1,119 @@
+
+<div class="border border-gray-500 rounded-xl  m-4 p-4">
+    <div>
+      <p class="bold text-2xl mt-4 mb-4 text-center font-medium">Daftar Booking</p>
+
+      <div class="flex flex-col sm:flex-row justify-between mb-4">
+        <div class="sm:mb-0 mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Cari booking..."
+            class="border p-3 rounded-md h-  sm:w-full w-full"
+          />
+        </div>
+          <button
+            class="bg-gray-500 text-white p-3 rounded-md mb-4 flex gap-2 hover:bg-gray-300 hover:text-black"
+            (click)="tambahbooking()"
+          ><mat-icon>add_circle</mat-icon>
+            Tambah Data
+          </button>
+      </div>
+  
+      <div class="sm:overflow-none overflow-auto">
+        <table class="border w-full rounded-lg">
+          <thead>
+            <tr>
+              <th class="border-collapse border font-medium p-2">Id</th>
+              <th class="border-collapse border font-medium p-2">Tanggal Booking</th>
+              <th class="border-collapse border font-medium p-2">Tanggal Penanganan</th>
+              <th class="border-collapse border font-medium p-2">Keluhan</th>
+              <th class="border-collapse border font-medium p-2">No Antrian</th>
+              <th class="border-collapse border font-medium p-2">Waktu Datang</th>
+              <th class="border-collapse border font-medium p-2">No Polisi</th>
+              <th class="border-collapse border font-medium p-2">Nama Pelanggan</th>
+              <th class="border-collapse border font-medium p-2">Status</th>
+              <th class="border-collapse border font-medium p-2 w-28">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" *ngFor="let booking of filteredData(); let i = index">
+              <td class="border-collapse border p-2">{{ booking.id }}</td>
+              <td class="border-collapse border p-2">{{ booking.tanggal_booking }}</td>
+              <td class="border-collapse border p-2">{{ booking.tanggal_penanganan }}</td>
+              <td class="border-collapse border p-2">{{ booking.keluhan }}</td>
+              <td class="border-collapse border p-2">{{ booking.no_antrian }}</td>
+              <td class="border-collapse border p-2">{{ booking.waktu }}</td>
+              <td class="border-collapse border p-2">{{ booking.kendaraan?.nopol }}</td>
+              <td class="border-collapse border p-2">{{ booking.kendaraan?.pelanggan?.nama }}</td>
+              <td class="border-collapse border p-2">{{ booking.status }}</td>
+              <td class="border-collapse border p-2">
+                <div class="flex justify-center gap-3">
+          
+                  <button
+                    class="bg-green-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-green-400"
+                    (click)="editbooking(booking)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+      
+             
+                  <button
+                    class="bg-red-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-red-400"
+                    (click)="hapusbooking(booking.id)"
+                  >
+                    <mat-icon class="text-center"><span>delete</span></mat-icon>
+                  </button>
+      
+     
+                  <button
+                    *ngIf="booking.status === 'selesai'"
+                    class="bg-blue-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-blue-400"
+                    (click)="aksiSelesai(booking.id)"
+                  >
+                    <mat-icon>check</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+
+    <div class="flex justify-between items-center mt-4">
+      <span class="p-2 text-sm">
+        Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ bookingList.length }} data
+      </span>
+      <div class="flex gap-2">
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+        </button>
+    
+ 
+        <button
+          *ngFor="let page of getPages()"
+          class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
+         
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+    
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="nextPage()"
+          [disabled]="currentPage >= totalPages()"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+
+  </div>
+  

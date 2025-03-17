@@ -1,0 +1,130 @@
+<div class="border border-blue-500 m-4 p-4 shadow-lg rounded-lg">
+
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 border border-gray-400 p-4 rounded-lg bg-white">
+    <div class="flex flex-col justify-center items-center p-4">
+      <mat-icon class="text-full text-blue-500">people</mat-icon>
+      <p class="mt-2 font-semibold">Pelanggan</p>
+      <h2 class="text-2xl font-bold">{{ pelangganCount }}</h2>
+    </div>
+    <div class="flex flex-col justify-center items-center p-4">
+      <mat-icon class="text-full text-green-500">badge</mat-icon>
+      <p class="mt-2 font-semibold">Karyawan</p>
+      <h2 class="text-2xl font-bold">{{ karyawanCount }}</h2>
+    </div>
+    <div class="flex flex-col justify-center items-center p-4">
+      <mat-icon class="text-full text-red-500">directions_car</mat-icon>
+      <p class="mt-2 font-semibold">Kendaraan</p>
+      <h2 class="text-2xl font-bold">{{ kendaraanCount }}</h2>
+    </div>
+  </div>
+
+  <div class="mt-6 mb-4 ">
+    <label for="filterDate" class="block font-medium">Filter berdasarkan bulan:</label>
+    <div class="flex gap-4">
+    <input id="filterDate" type="date" [(ngModel)]="filterDate" (change)="onFilterDateChange()"
+      class="border p-3 rounded-md sm:w-auto w-full" />
+      <button
+      class="bg-red-500 text-white p-4 flex gap-2 hover:bg-red-400 rounded-md"
+      (click)="resetFilter()"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+  </div>
+
+ 
+  <div class="sm:overflow-auto overflow-auto">
+    <p class="font-medium text-lg mb-4">Laporan Bulanan ({{ selectedMonth }}/{{ selectedYear }})</p>
+    <table class="w-full border rounded-lg shadow-md ">
+      <thead>
+        <tr class="border-collapse">
+          <th class="border font-medium p-2">Id</th>
+          <th class="border font-medium p-2">Tanggal</th>
+          <th class="border font-medium p-2">Pelanggan</th>
+          <th class="border font-medium p-2">Karyawan</th>
+          <th class="border font-medium p-2">Kendaraan</th>
+          <th class="border font-medium p-2">Jenis Service</th>
+          <th class="border font-medium p-2">Harga Service</th>
+          <th class="border font-medium p-2">Nama Sparepart</th>
+          <th class="border font-medium p-2">Jumlah Sparepart</th>
+          <th class="border font-medium p-2">Harga Beli Sparepart</th>
+          <th class="border font-medium p-2">Harga Jual Sparepart</th>
+          <th class="border font-medium p-2">Total Harga Beli</th>
+          <th class="border font-medium p-2">Total Harga Jual</th>
+          <th class="border font-medium p-2">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let laporan of laporanBulanan" class="text-center bg-white">
+          <td class="border p-2">{{ laporan.id }}</td>
+          <td class="border p-2">{{ laporan.tanggal | date:'shortDate' }}</td>
+          <td class="border p-2">{{ laporan.kendaraan?.pelanggan?.nama }}</td>
+          <td class="border p-2">{{ laporan.karyawan?.nama }}</td>
+          <td class="border p-2">{{ laporan.kendaraan?.nopol }}</td>
+          <td class="border p-2">{{ laporan.jasa?.jenis }}</td>
+          <td class="border p-2">{{ laporan.jasa?.harga | currency:'Rp.' }}</td>
+          <td class="border p-2">
+            <ul class="list-none p-0 m-0">
+              <li *ngFor="let sp of laporan.spareparts">
+                {{ sp.nama }}
+              </li>
+            </ul>
+          </td>
+          <td class="border p-2">
+            <ul class="list-none p-0 m-0">
+              <li *ngFor="let sp of laporan.spareparts">
+                {{ sp.riwayat_sparepart?.jumlah_sparepart }}
+              </li>
+            </ul>
+          </td>
+          <td class="border p-2">
+            <ul class="list-none p-0 m-0">
+              <li *ngFor="let sp of laporan.spareparts">
+                {{ sp.riwayat_sparepart?.harga_beli | currency:'Rp.' }}
+              </li>
+            </ul>
+          </td>
+          <td class="border p-2">
+            <ul class="list-none p-0 m-0">
+              <li *ngFor="let sp of laporan.spareparts">
+                {{ sp.riwayat_sparepart?.harga_jual | currency:'Rp.' }}
+              </li>
+            </ul>
+          </td>
+          <td class="border p-2">{{ calculateTotalHargaBeli(laporan) | currency:'Rp.' }}</td>
+          <td class="border p-2">{{ calculateTotalHargaJual(laporan) | currency:'Rp.' }}</td>
+          <td class="border p-2 font-semibold">{{ laporan.subtotal | currency:'Rp.' }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="bg-gray-100 font-bold">
+          <td colspan="13" class="border p-2 text-right">Total Keuntungan:</td>
+          <td class="border p-2">{{ totalPendapatan | currency:'Rp.' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <span class="p-2 text-sm">
+      Menampilkan {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage }} dari {{ totalItems }} data
+    </span>
+    <div class="flex gap-2">
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <button *ngFor="let page of [].constructor(totalPages); let i = index"
+        (click)="goToPage(i + 1)"
+        [class.bg-blue-500]="(i + 1) === currentPage"
+        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black">
+        {{ i + 1 }}
+      </button>
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

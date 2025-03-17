@@ -1,0 +1,48 @@
+<section class="p-6 bg-neutral-900 w-full min-h-[90vh] flex flex-col items-center">
+  <h2 class="text-white text-center text-2xl font-bold mb-6">Semua Booking</h2>
+
+  <div class="">
+  <div *ngIf="allBookings.length > 0 && !booking; else noBooking" 
+    class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
+    <div *ngFor="let b of allBookings" 
+         class="p-6 border border-gray-700 rounded-lg shadow-lg text-white bg-gray-800 w-72 flex-shrink-0 transition-transform transform hover:scale-105">
+      <div class="flex items-center gap-2 mb-2">
+        <mat-icon class="text-blue-400">event</mat-icon>
+        <p class="text-lg">Tanggal: <span class="font-medium">{{ b.tanggal_booking }}</span></p>
+      </div>
+      <div class="h-1 bg-gray-500 w-full"></div>
+      <p class="text-lg mt-3">Status: <span class="font-medium">{{ b.status }}</span></p>
+      <p class="text-lg">Nama Pelanggan: <span class="font-medium">{{ b.kendaraan.pelanggan.nama }}</span></p>
+      <p class="text-lg">No Antrian: <span class="font-medium">{{ b.no_antrian }}</span></p>
+      <p class="text-lg">Waktu Datang: <span class="font-medium">{{ b.waktu }}</span></p>
+
+      <button *ngIf="b.kendaraan.id_pelanggan == pelangganId" 
+              (click)="getBookingDetail(b.id)" 
+              class="flex justify-center mt-4 w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition">
+        <mat-icon class="mr-2">visibility</mat-icon> Lihat Detail
+      </button>
+    </div>
+  </div>
+</div>
+
+  <ng-template #noBooking>
+    <p class="text-white text-center text-lg font-semibold">Belum ada booking.</p>
+  </ng-template>
+
+
+  <div *ngIf="booking" class="w-full max-w-3xl mt-8">
+    <h2 class="text-white text-center text-2xl font-bold mb-4">Detail Booking</h2>
+    <div class="p-6 border border-gray-700 rounded-lg shadow-lg bg-gray-800 text-white">
+      <p class="text-lg">No Polisi: <span class="font-semibold">{{ booking.kendaraan.nopol }}</span></p>
+      <p class="text-lg">Merek: <span class="font-semibold">{{ booking.kendaraan.merek }}</span></p>
+      <p class="text-lg">Status: <span class="font-semibold">{{ booking.status }}</span></p>
+      <p class="text-lg">Waktu Datang: <span class="font-semibold">{{ booking.waktu }}</span></p>
+      <p class="text-lg">No Antrian: <span class="font-semibold">{{ booking.no_antrian }}</span></p>
+      <p class="text-lg">Tanggal: <span class="font-semibold">{{ booking.tanggal_booking }}</span></p>
+
+      <button (click)="closeDetail()" class="mt-6 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition">
+        <mat-icon class="mr-2">arrow_back</mat-icon> Kembali
+      </button>
+    </div>
+  </div>
+</section>

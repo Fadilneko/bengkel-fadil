@@ -1,0 +1,111 @@
+<div class="border border-gray-500 rounded-xl m-4  p-4">
+  <div>
+    <p class="bold text-2xl mt-4 mb-4 text-center font-medium">
+      Daftar Karyawan
+    </p>
+
+    <div class="flex flex-col mb-4  sm:flex-row justify-between">
+      <div class="sm:mb-0 mb-4">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Cari Nama Karyawan..."
+          class="border p-3 rounded-md sm:w-30 w-full"
+        />
+      </div>
+      <button
+        class="bg-gray-500 text-white p-3 sm:w-auto rounded-md mb-4 flex gap-2 hover:bg-gray-300 hover:text-black"
+        (click)="tambahkaryawan()"
+      >
+        <mat-icon>add_circle</mat-icon>
+        Tambah Data
+      </button>
+    </div>
+
+    <div class="overflow-x-auto w-auto">
+      <table class="border min-w-full rounded-lg overflow-x-auto">
+        <tr>
+          <th class="border-collapse border font-medium p-2">Id</th>
+          <th class="border-collapse border font-medium p-2">Email</th>
+          <th class="border-collapse border font-medium p-2">Nama</th>
+          <th class="border-collapse border font-medium p-2">Alamat</th>
+          <th class="border-collapse border font-medium p-2">No HP</th>
+          <th class="border-collapse border font-medium p-2">Foto</th>
+          <th class="border-collapse border font-medium p-2">Role</th>
+          <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
+        </tr>
+
+        <tr
+          class="text-center items-center"
+          *ngFor="let karyawan of filteredData(); let i = index"
+        >
+          <td class="border-collapse border p-2">{{ karyawan.id }}</td>
+          <td class="border-collapse border p-2">{{ karyawan.email }}</td>
+          <td class="border-collapse border p-2">{{ karyawan.nama }}</td>
+          <td class="border-collapse border p-2">{{ karyawan.alamat }}</td>
+          <td class="border-collapse border p-2">{{ karyawan.hp }}</td>
+          <td class="border-collapse border p-2">
+            <div class="flex justify-center">
+              <img
+                *ngIf="karyawan.foto"
+                [src]="'assets/' + karyawan.foto"
+                alt="Foto Karyawan"
+                class="w-10 h-10"
+              />
+            </div>
+          </td>
+          <td class="border-collapse border p-2">{{ karyawan.role }}</td>
+          <td class="border-collapse border p-2">
+            <div class="flex justify-center gap-3 flex-col sm:flex-row">
+              <button
+                class="bg-green-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-green-400"
+                (click)="editkaryawan(karyawan)"
+              >
+                <mat-icon>edit</mat-icon><span></span>
+              </button>
+
+              <button
+                class="bg-red-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-red-400"
+                (click)="hapuskaryawan(karyawan.id)"
+              >
+                <mat-icon class="text-center"><span>delete</span></mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <span class="p-2 text-sm">
+      Menampilkan {{ startItem() }} - {{ endItem() }} dari
+      {{ karyawanList.length }} data
+    </span>
+    <div class="flex gap-2">
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+      </button>
+
+      <button
+        *ngFor="let page of getPages()"
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages()"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="p-5">
+
+    <h2 class="text-xl font-medium mb-4 text-center">{{ jasaservice.id ? 'Edit Jasa service' : 'Tambah Jasa service' }}</h2>
+
+  
+    
+    <div class="w-full mb-4">
+      <label>Jenis:</label>
+      <input type="text" [(ngModel)]="jasaservice.jenis" class="border p-2 w-full">
+    </div>
+
+    <div class="w-full mb-4">
+        <label>Harga:</label>
+        <input type="text" [(ngModel)]="jasaservice.harga" class="border p-2 w-full">
+      </div>
+
+    
+    
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+    </div>
+    
+    </div>
+    

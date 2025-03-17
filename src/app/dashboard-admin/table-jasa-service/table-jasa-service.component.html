@@ -1,0 +1,52 @@
+<div class="border border-gray-500 rounded-xl  m-4 grid p-4">
+    <div>
+      <p class="bold text-2xl mt-4 mb-4 text-center font-medium">Daftar Jasa service</p>
+  
+      <div class="mb-2 flex justify-end">
+        <button
+          class="bg-gray-500 text-white p-3 rounded-md mb-4 flex gap-2 sm:w-auto w-full hover:bg-gray-300 hover:text-black"
+          (click)="tambahjasaservice()"
+        ><mat-icon>add_circle</mat-icon>
+          Tambah Data
+        </button>
+      </div>
+  
+      <div class=" ">
+        <table
+          class="border w-full rounded-lg sm:overflow-x-auto lg:overflow-x-auto"
+        >
+          <tr>
+            <th class="border-collapse border font-medium p-2">Id</th>
+            <th class="border-collapse border font-medium p-2">Jenis</th>
+            <th class="border-collapse border font-medium p-2">Harga</th>
+            <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
+           
+          </tr>
+  
+          <tr class="text-center" *ngFor="let jasaservice of jasaserviceList">
+            <td class="border-collapse border p-2">{{ jasaservice.id }}</td>
+            <td class="border-collapse border p-2">{{ jasaservice.jenis }}</td>
+            <td class="border-collapse border p-2">{{ jasaservice.harga | currency:'Rp.' }}</td>
+            <td class="border-collapse border p-2">
+              <div class="flex justify-center gap-3 flex-col sm:flex-row">
+                <button
+                  class="bg-green-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-green-400"
+                  (click)="editjasaservice(jasaservice)"
+                >
+                  <mat-icon>edit</mat-icon><span></span>
+                </button>
+  
+                <button
+                  class="bg-red-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-red-400"
+                  (click)="hapusjasaservice(jasaservice.id)"
+                >
+                  <mat-icon class="text-center"><span>delete</span></mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  

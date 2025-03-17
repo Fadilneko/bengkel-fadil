@@ -1,0 +1,109 @@
+<div class="border border-gray-500 rounded-xl  m-4 p-4">
+    <div>
+      <p class="bold text-2xl mt-4 mb-4 text-center font-medium">Daftar Sparepart</p>
+  
+      <div class="flex flex-col sm:flex-row justify-between mb-4">
+        <div class=" sm:mb-0 mb-4">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Cari Nama Sparepart..."
+            class="border p-3 rounded-md h-  sm:w-auto w-full"
+          />
+        </div>
+          <button
+            class="bg-gray-500 text-white p-3 rounded-md mb-4 flex gap-2 hover:bg-gray-300 hover:text-black"
+            (click)="tambahsparepart()"
+          ><mat-icon>add_circle</mat-icon>
+            Tambah Data
+          </button>
+      </div>
+  
+      <div class="sm:overflow-none overflow-auto ">
+        <table
+          class="border w-full"
+        >
+          <tr>
+            <th class="border-collapse border font-medium p-2">Id</th>
+            <th class="border-collapse border font-medium p-2">kode</th>
+            <th class="border-collapse border font-medium p-2">Nama</th>
+            <th class="border-collapse border font-medium p-2">Jumlah</th>
+            <th class="border-collapse border font-medium p-2">Harga Beli</th>
+            <th class="border-collapse border font-medium p-2">Harga Jual</th>
+            <th class="border-collapse border font-medium p-2">Foto</th>
+            <th class="border-collapse border font-medium p-2">Kategori</th>
+           
+            <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
+           
+          </tr>
+  
+          <tr class="text-center" *ngFor="let sparepart of filteredData(); let i = index">
+            <td class="border-collapse border p-2">{{ sparepart.id }}</td>
+            <td class="border-collapse border p-2">{{ sparepart.kode }}</td>
+            <td class="border-collapse border p-2">{{ sparepart.nama }}</td>
+            <td class="border-collapse border p-2">{{ sparepart.jumlah }}</td>
+            <td class="border-collapse border p-2">{{ sparepart.harga_beli | number:'1.0-0' }}</td>
+            <td class="border-collapse border p-2">{{ sparepart.harga_jual | number:'1.0-0' }}</td>
+            <td class="border-collapse border p-2 "> 
+              <div class="flex justify-center">
+                <img *ngIf="sparepart.foto" [src]="'assets/' + sparepart.foto" alt="Foto Sparepart" class=" w-10 h-10 ">
+              </div>
+            </td>
+            <td class="border-collapse border p-2">{{ sparepart.kategori }}</td>
+            <td class="border-collapse border p-2">
+              <div class="flex justify-center gap-3 sm:flex-row flex-col">
+                <button
+                  class="bg-green-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-green-400"
+                  (click)="editsparepart(sparepart)"
+                >
+                  <mat-icon>edit</mat-icon><span></span>
+                </button>
+  
+                <button
+                  class="bg-red-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-red-400"
+                  (click)="hapussparepart(sparepart.id)"
+                >
+                  <mat-icon class="text-center"><span>delete</span></mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mt-4">
+      <span class="p-2 text-sm">
+        Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ sparepartList.length }} data
+      </span>
+      <div class="flex gap-2">
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+        </button>
+    
+ 
+        <button
+          *ngFor="let page of getPages()"
+          class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
+         
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+    
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="nextPage()"
+          [disabled]="currentPage >= totalPages()"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  

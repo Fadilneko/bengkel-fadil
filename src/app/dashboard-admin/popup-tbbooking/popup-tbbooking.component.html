@@ -1,0 +1,109 @@
+<div class="p-5">
+    <h2 class="text-xl font-medium mb-4 text-center">
+      {{ booking.id ? 'Edit Booking' : 'Tambah Booking' }}
+    </h2>
+
+    <div class="flex gap-2">
+  
+    <div class="w-full mb-4">
+      <label for="tanggalBooking">Tanggal Booking:</label>
+      <input type="date" id="tanggalBooking" [(ngModel)]="booking.tanggal_booking" (change)="onTanggalBookingChange()" class="border p-2 w-full" />
+
+    </div>
+  
+    <div class="w-full mb-4">
+      <label for="tanggalPenanganan">Tanggal Penanganan:</label>
+      <input type="date" id="tanggalPenanganan" [(ngModel)]="booking.tanggal_penanganan" class="border p-2 w-full" />
+    </div>
+
+    </div>
+
+    
+  
+    <div class="w-full mb-4">
+      <label for="keluhan">Keluhan:</label>
+      <input type="text" id="keluhan" [(ngModel)]="booking.keluhan" class="border p-2 w-full" />
+    </div>
+  
+    <div class="flex gap-2">
+
+    <div class="w-full mb-4">
+      <label for="namaPelanggan">Nama Pelanggan:</label>
+      <div *ngIf="booking.id; else pelangganDropdown">
+        <p id="namaPelanggan" class="border p-2 w-full bg-gray-100">
+            {{ getNamaPelanggan() }}
+          </p>
+      </div>
+
+    </div>
+
+    <div class="flex gap-2">
+      <ng-template #pelangganDropdown>
+        <select id="namaPelanggan" [(ngModel)]="booking.pelanggan_id" (change)="onPelangganChange(booking.pelanggan_id)" class="border p-2 w-full">
+          <option *ngFor="let pelanggan of pelangganList" [value]="pelanggan.id">
+            {{ pelanggan.nama }}
+          </option>
+        </select>
+      </ng-template>
+    </div>
+  
+    <div class="w-full mb-4">
+      <label for="noPolisi">No Polisi:</label>
+      
+      <div *ngIf="booking.id; else kendaraanDropdown">
+        <p id="noPolisi" class="border p-2 w-full bg-gray-100">
+          {{ booking.kendaraan?.nopol || 'Tidak Ditemukan' }}
+        </p>
+      </div>
+    
+      <ng-template #kendaraanDropdown>
+        <select id="kendaraan" [(ngModel)]="booking.id_kendaraan" class="border p-2 w-full">
+          <option *ngFor="let kendaraan of kendaraanList" [value]="kendaraan.id">
+            {{ kendaraan.nopol }}
+          </option>
+        </select>
+        
+      </ng-template>
+    </div>
+    
+    
+    
+
+  </div>
+
+  <div class="flex gap-2">
+  
+    <div class="w-full mb-4">
+      <label for="noAntrian">No Antrian:</label>
+      <input type="text" id="noAntrian" [(ngModel)]="booking.no_antrian" class="border p-2 w-full" readonly />
+    </div>
+
+    <div class="w-full mb-4">
+      <label for="waktu">Waktu Datang:</label>
+      <input
+        type="text"
+        id="waktu"
+        [(ngModel)]="booking.waktu"
+        class="border p-2 w-full bg-gray-100"
+        readonly
+      />
+    </div>
+
+  </div>
+  
+  <select id="status" [(ngModel)]="booking.status" (change)="onStatusChange()" class="border p-2 w-full">
+    <option value="tunggu">Tunggu</option>
+    <option value="setuju">Setuju</option>
+    <option value="belum di kerjakan">Belum Di Kerjakan</option>
+    <option value="di kerjakan">Di Kerjakan</option>
+    <option value="selesai">Selesai</option>
+  </select>
+  
+  
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,57 @@
+<div class="p-5">
+
+    <h2 class="text-xl font-medium mb-4 text-center">{{ sparepart.id ? 'Edit Sparepart' : 'Tambah Sparepart' }}</h2>
+
+    <div class="flex gap-4 mb-4">
+    
+        <div class="w-full">
+        <label>Kode:</label>
+        <input type="text" [(ngModel)]="sparepart.kode" class="border p-2 w-full">
+        </div>
+
+        <div class="w-full">
+            <label>Nama:</label>
+            <input type="text" [(ngModel)]="sparepart.nama" class="border p-2 w-full">
+        </div>
+
+    </div>
+    
+    <div class="flex gap-4 mb-4">
+        
+        <div class="w-full">
+            <label>Harga Beli:</label>
+            <input type="number" [(ngModel)]="sparepart.harga_beli" class="border p-2 w-full">
+        </div>
+
+        <div class="w-full">
+          <label>Harga Jual:</label>
+          <input type="number" [(ngModel)]="sparepart.harga_jual" class="border p-2 w-full">
+      </div>
+    
+    </div>
+
+    
+    <div class="w-full">
+      <label>Jumlah:</label>
+      <input type="number" [(ngModel)]="sparepart.jumlah" class="border p-2 w-full">
+    </div>
+
+    <div class="mb-2">
+      <label>Foto:</label>
+      <input type="file" (change)="onFileSelected($event)" class="border p-2 w-full">
+    </div>
+    
+    <img *ngIf="sparepart.foto" [src]="'assets/' + sparepart.foto" alt="Foto sparepart" class="mt-2 w-32 h-32 object-cover">
+
+      <div class="mb-2">
+        <label>Kategori:</label>
+        <input type="text" [(ngModel)]="sparepart.kategori" class="border p-2 w-full">
+      </div>
+    
+    <div class="flex justify-end gap-2 mt-4">
+      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+    </div>
+    
+    </div>
+    

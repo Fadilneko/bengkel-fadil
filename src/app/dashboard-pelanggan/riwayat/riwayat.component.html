@@ -1,0 +1,29 @@
+<section class="p-6 bg-neutral-900 w-full min-h-[90vh] flex flex-col items-center">
+  <h2 class="text-white text-center text-2xl font-bold mb-6">Daftar Service</h2>
+
+  <div class="">
+  <div *ngIf="allriwayat.length > 0; else noriwayat" 
+       class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let b of allriwayat" 
+         class="p-6 border border-gray-700 rounded-lg shadow-lg text-white bg-gray-800 w-72 flex-shrink-0 transition-transform hover:scale-105">
+      <div class="flex items-center gap-2 mb-2">
+        <mat-icon class="text-blue-400">event</mat-icon>
+        <p class="text-lg">Tanggal: <span class="font-semibold">{{ b.tanggal }}</span></p>
+      </div>
+      <div class="h-1 bg-gray-500 w-full"></div>
+      <p class="text-lg mt-3">Nama: <span class="font-semibold">{{ b.kendaraan.pelanggan.nama }}</span></p>
+      <p class="text-lg">No Polisi: <span class="font-semibold">{{ b.kendaraan.nopol }}</span></p>
+      <p class="text-lg">Merek: <span class="font-semibold">{{ b.kendaraan.merek }}</span></p>
+
+      <button (click)="openDetail(b)" 
+              class="flex justify-center mt-4 w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition">
+        <mat-icon class="mr-2">visibility</mat-icon> Lihat Detail
+      </button>
+    </div>
+  </div>
+</div>
+
+  <ng-template #noriwayat>
+    <p class="text-white text-center text-lg font-semibold">Belum Ada Kendaraan Yang Di Service.</p>
+  </ng-template>
+</section>

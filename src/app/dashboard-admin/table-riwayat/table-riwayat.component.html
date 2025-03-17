@@ -1,0 +1,141 @@
+<div class="border border-gray-500 rounded-xl m-4 p-4">
+  <div>
+    <p class="bold text-2xl mt-4 mb-4 text-center font-medium">Daftar Riwayat</p>
+
+    <div class="flex flex-col sm:flex-row justify-between mb-4 gap-3">
+      <div class="flex gap-2 flex-col sm:flex-row">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Cari riwayat..."
+          class="border p-3 rounded-md"
+        />
+        <input
+          type="date"
+          [(ngModel)]="selectedDate"
+          (change)="applyFilters()"
+          class="border p-3 rounded-md sm:w-auto"
+        />
+        <button
+          class="bg-red-500 text-white p-4 flex gap-2 hover:bg-red-400 rounded-md"
+          (click)="resetFilter()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <div class="">
+        <button
+          class="bg-gray-500 text-white p-3 rounded-md flex gap-2 hover:bg-gray-300 hover:text-black"
+          (click)="tambahriwayat()"
+        >
+          <mat-icon>add_circle</mat-icon> Tambah Data
+        </button>
+      </div>
+    </div>
+    
+    <div class="sm:overflow-none overflow-auto">
+      <table class="border w-full rounded-lg">
+        <thead>
+          <tr>
+            <th class="border-collapse border font-medium p-2">Id</th>
+            <th class="border-collapse border font-medium p-2">Tanggal riwayat</th>
+            <th class="border-collapse border font-medium p-2">Keluhan</th>
+            <th class="border-collapse border font-medium p-2">Penanganan</th>
+            <th class="border-collapse border font-medium p-2">Catatan</th>
+            <th class="border-collapse border font-medium p-2">Nama Pelanggan</th>
+            <th class="border-collapse border font-medium p-2">Nama Karyawan</th>
+            <th class="border-collapse border font-medium p-2">No Polisi</th>
+            <th class="border-collapse border font-medium p-2">Jenis Service</th>
+            <th class="border-collapse border font-medium p-2">Harga Service</th>
+            <th class="border-collapse border font-medium p-2">Nama Sparepart</th>
+            <th class="border-collapse border font-medium p-2">Harga Jual Sparepart</th>
+            <th class="border-collapse border font-medium p-2">Jumlah Sparepart</th>
+            <th class="border-collapse border font-medium p-2">Total Harga</th>
+            <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center" *ngFor="let riwayat of filteredData(); let i = index">
+            <td class="border-collapse border p-2">{{ riwayat.id }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.tanggal | date:'shortDate' }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.keluhan }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.penanganan }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.catatan }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.kendaraan?.pelanggan?.nama }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.karyawan?.nama }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.kendaraan?.nopol }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.jasa?.jenis }}</td>
+            <td class="border-collapse border p-2">{{ riwayat.jasa?.harga | currency:'Rp.' }}</td>
+           
+            <td class="border-collapse border p-2">
+              <ul class="list-none p-0 m-0">
+                <li *ngFor="let sp of riwayat.spareparts">
+                  {{ sp.nama }}
+                </li>
+              </ul>
+            </td>
+           
+            <td class="border-collapse border p-2">
+              <ul class="list-none p-0 m-0">
+                <li *ngFor="let sp of riwayat.spareparts">
+                  {{ sp.riwayat_sparepart?.harga_jual | currency:'Rp.' }}
+                </li>
+              </ul>
+            </td>
+           
+            <td class="border-collapse border p-2">
+              <ul class="list-none p-0 m-0">
+                <li *ngFor="let sp of riwayat.spareparts">
+                  {{ sp.riwayat_sparepart?.jumlah_sparepart }}
+                </li>
+              </ul>
+            </td>
+          
+            <td class="border-collapse border p-2">{{ riwayat.total_harga | currency:'Rp.' }}</td>
+          
+            <td class="border-collapse border p-2">
+              <div class="flex justify-center gap-3">
+                <button
+                  class="bg-blue-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-blue-400"
+                  (click)="printInvoice(riwayat)"
+                >
+                  <mat-icon>print</mat-icon>
+                </button>
+               
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <span class="p-2 text-sm">
+      Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ filteredCount || riwayatList.length }} data
+    </span>
+    <div class="flex gap-2">
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+      </button>
+      <button
+        *ngFor="let page of getPages()"
+        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
+        [class.bg-blue-500]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages()"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
