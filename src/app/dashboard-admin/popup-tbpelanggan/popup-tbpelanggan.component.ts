@@ -35,11 +35,11 @@ export class PopupTbpelangganComponent {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Jika ada file yang dipilih, upload foto terlebih dahulu
+       
         if (this.selectedFile) {
           this.service.uploadFoto(this.selectedFile).subscribe(response => {
             console.log('Upload berhasil:', response);
-            // Update properti foto dengan nama file yang diterima
+           
             this.pelanggan.foto = response.filename;
             this.simpanDataPelanggan();
           }, error => {

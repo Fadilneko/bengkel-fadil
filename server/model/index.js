@@ -42,7 +42,7 @@ Riwayat.belongsTo(Jasaservice, { foreignKey: 'id_jasa', as: 'jasa' });
 Karyawan.hasMany(Riwayat, { foreignKey: 'id_karyawan', as: 'riwayat' });
 Kendaraan.hasMany(Riwayat, { foreignKey: 'id_kendaraan', as: 'riwayat' });
 Jasaservice.hasMany(Riwayat, { foreignKey: 'id_jasa', as: 'riwayat' });
-Sparepart.hasMany(Riwayat, { foreignKey: 'id_sparepart', as: 'riwayat' });
+
 
 Riwayat.belongsToMany(Sparepart, { through: RiwayatSparepart, as: 'spareparts', foreignKey: 'riwayat_id' });
 Sparepart.belongsToMany(Riwayat, { through: RiwayatSparepart, as: 'riwayats', foreignKey: 'sparepart_id' });

@@ -83,10 +83,7 @@
       </button>
     </div>
 
-    <div
-      *ngIf="kendaraanList.length > 0; else noKendaraan"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full"
-    >
+    <div *ngIf="kendaraanList.length > 0; else noKendaraanTemplate" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
       <div
         *ngFor="let kendaraan of kendaraanList"
         class="w-full p-4 border border-white rounded-lg mb-2 shadow-md transition-transform transform hover:scale-105 col-span-1"
@@ -128,28 +125,22 @@
           Edit
         </button>
         <button
-          class="text-black border rounded-sm w-full h-10 hover:bg-black hover:text-white transition duration-300"
-          *ngIf="kendaraan.dalamBooking; else bookingButton"
-          [routerLink]="['/pelanggan/booking', kendaraan.bookingId]"
-        >
-          Detail Booking
-        </button>
-
-        <ng-template #bookingButton>
-          <button
-            class="text-black border rounded-sm w-full h-10 hover:bg-black hover:text-white transition duration-300"
-            (click)="tambahbooking()"
-          >
-            Booking
-          </button>
-        </ng-template>
+        class="text-black border rounded-sm w-full h-10 transition duration-300"
+        [ngClass]="{
+          'hover:bg-black hover:text-white': !kendaraan.dalamBooking,
+          'bg-gray-400 cursor-not-allowed': kendaraan.dalamBooking
+        }"
+        (click)="tambahbooking()"
+        [disabled]="kendaraan.dalamBooking"
+      >
+        Booking
+      </button>
       </div>
     </div>
-
-    <ng-template #noKendaraan>
+    
+    <ng-template #noKendaraanTemplate>
       <p class="text-center text-black">
         Silahkan Menambahkan Kendaraan Terlebih Dahulu.
       </p>
     </ng-template>
-  </div>
-</div>
+    

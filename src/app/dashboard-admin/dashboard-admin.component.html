@@ -1,6 +1,4 @@
 <div class="border border-blue-500 m-4 p-4 shadow-lg rounded-lg">
-
-
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 border border-gray-400 p-4 rounded-lg bg-white">
     <div class="flex flex-col justify-center items-center p-4">
       <mat-icon class="text-full text-blue-500">people</mat-icon>
@@ -22,20 +20,21 @@
   <div class="mt-6 mb-4 ">
     <label for="filterDate" class="block font-medium">Filter berdasarkan bulan:</label>
     <div class="flex gap-4">
-    <input id="filterDate" type="date" [(ngModel)]="filterDate" (change)="onFilterDateChange()"
-      class="border p-3 rounded-md sm:w-auto w-full" />
+      <input id="filterMonth" type="month" [(ngModel)]="filterDate" (change)="onFilterDateChange()"
+             class="border p-3 rounded-md sm:w-auto w-full" />
       <button
-      class="bg-red-500 text-white p-4 flex gap-2 hover:bg-red-400 rounded-md"
-      (click)="resetFilter()"
-    >
-      <mat-icon>refresh</mat-icon>
-    </button>
-  </div>
+        class="bg-red-500 text-white p-4 flex gap-2 hover:bg-red-400 rounded-md"
+        (click)="resetFilter()"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
   </div>
 
- 
-  <div class="sm:overflow-auto overflow-auto">
-    <p class="font-medium text-lg mb-4">Laporan Bulanan ({{ selectedMonth }}/{{ selectedYear }})</p>
+  <div class="mt-4">
+    <p class="font-medium text-lg mb-4 text-center">
+      Laporan Bulanan {{ selectedMonth }}/{{ selectedYear }}
+    </p>
     <table class="w-full border rounded-lg shadow-md ">
       <thead>
         <tr class="border-collapse">
@@ -43,7 +42,7 @@
           <th class="border font-medium p-2">Tanggal</th>
           <th class="border font-medium p-2">Pelanggan</th>
           <th class="border font-medium p-2">Karyawan</th>
-          <th class="border font-medium p-2">Kendaraan</th>
+          <th class="border font-medium p-2">Nopol</th>
           <th class="border font-medium p-2">Jenis Service</th>
           <th class="border font-medium p-2">Harga Service</th>
           <th class="border font-medium p-2">Nama Sparepart</th>
@@ -108,22 +107,32 @@
 
   <div class="flex justify-between items-center mt-4">
     <span class="p-2 text-sm">
-      Menampilkan {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage }} dari {{ totalItems }} data
+      Menampilkan {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+      {{ currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage }} dari {{ totalItems }} data
     </span>
     <div class="flex gap-2">
-      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1"
-        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black">
-        <mat-icon>keyboard_arrow_left</mat-icon>
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
       </button>
-      <button *ngFor="let page of [].constructor(totalPages); let i = index"
-        (click)="goToPage(i + 1)"
-        [class.bg-blue-500]="(i + 1) === currentPage"
-        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black">
-        {{ i + 1 }}
+
+      <button
+        *ngFor="let page of getPages()"
+        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
       </button>
-      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages"
-        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black">
-        <mat-icon>keyboard_arrow_right</mat-icon>
+
+      <button
+        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage >= totalPages"
+      >
+        <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
       </button>
     </div>
   </div>

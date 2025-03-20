@@ -67,57 +67,68 @@ export class TablePelangganComponent implements OnInit {
         })
 }
 
+get filteredList(): any[] {
+  let filtered = this.pelangganList;
+
+
+  if (this.searchQuery) {
+    filtered = filtered.filter(item =>
+      item.nama.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+  
+
+  // if (this.filterStartDate) {
+  //   filtered = filtered.filter(booking => {
+  //     const bookingDate = new Date(booking.tanggal_booking);
+  //     return bookingDate >= new Date(this.filterStartDate);
+  //   });
+  // }
+  
+ 
+  
+  return filtered;
+}
+
+
 filteredData() {
-  let filtered = this.pelangganList.filter(k =>
-    k.nama.toLowerCase().includes(this.searchQuery.toLowerCase()) 
-
+  const filtered = this.filteredList;
+  return filtered.slice(
+    (this.currentPage - 1) * this.itemsPerPage,
+    this.currentPage * this.itemsPerPage
   );
-
-  return filtered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage);
 }
 
 totalPages(): number {
-  return Math.ceil(this.pelangganList.length / this.itemsPerPage);
+  return Math.ceil(this.filteredList.length / this.itemsPerPage);
 }
-
-
+  
 startItem(): number {
-  return (this.currentPage - 1) * this.itemsPerPage + 1;
+  return this.filteredList.length ? (this.currentPage - 1) * this.itemsPerPage + 1 : 0;
 }
-
-
+  
 endItem(): number {
-  return Math.min(this.currentPage * this.itemsPerPage, this.pelangganList.length);
+  return Math.min(this.currentPage * this.itemsPerPage, this.filteredList.length);
 }
-
-
+  
 getPages(): number[] {
   return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
 }
-
-
+  
 previousPage(): void {
   if (this.currentPage > 1) {
     this.currentPage--;
   }
 }
-
-
+  
 nextPage(): void {
   if (this.currentPage < this.totalPages()) {
     this.currentPage++;
   }
 }
-
-
+  
 goToPage(page: number): void {
   this.currentPage = page;
-}
-
-
-getPaginatedData(): any[] {
-  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  return this.pelangganList.slice(startIndex, startIndex + this.itemsPerPage);
 }
 
 }

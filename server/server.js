@@ -42,14 +42,16 @@ const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
- 
-    cb(null, path.join(__dirname, '../src/assets')); 
+    cb(null, path.join(__dirname, '../src/assets'));
   },
   filename: function (req, file, cb) {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName); 
+   
+    const safeName = path.basename(file.originalname);
+    const uniqueName = Date.now() + '-' + safeName;
+    cb(null, uniqueName);
   }
 });
+
 
 app.use('/assets', express.static(path.join(__dirname, '../src/assets')));
 
@@ -90,32 +92,60 @@ app.post('/register', async (req, res) => {
   const { email, password, role, nama } = req.body;
 
   try {
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
 
     const newUser = await db.User.create({
       email,
       password: hashedPassword,
-      role: role ?? 0, 
+      role: role ?? 0,
     });
 
+    console.log("New User:", newUser);
+
+   
     const newPelanggan = await db.Pelanggan.create({
-      user_id: newUser.id, 
+      user_id: newUser.id,
       email,
       password: hashedPassword,
       nama,
     });
 
+    console.log("New Pelanggan:", newPelanggan);
+
     res.status(201).json({
       message: 'User registered successfully',
-      user: newUser,
-      pelanggan: newPelanggan,
+      user: newUser.toJSON ? newUser.toJSON() : newUser,
+      pelanggan: newPelanggan.toJSON ? newPelanggan.toJSON() : newPelanggan,
     });
   } catch (err) {
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: 'Email sudah terdaftar' });
+    }
     res.status(400).json({ error: 'Error registering user', details: err });
   }
 });
+
+
+
+app.get('/check-email', async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email tidak disediakan' });
+  }
+
+  try {
+   
+    const user = await db.User.findOne({ where: { email } });
+  
+    return res.status(200).json({ exists: !!user });
+  } catch (err) {
+    console.error('Error checking email:', err);
+    return res.status(500).json({ error: 'Terjadi kesalahan pada server' });
+  }
+});
+
+
 
 // Login User / Karyawan
 app.post('/login', async (req, res) => {
@@ -204,15 +234,30 @@ app.get('/pelanggan/:id', async (req, res) => {
 
 
 // create pelanggan
-app.post('/pelanggan', async (req, res) => {
+app.post('/pelanggan', upload.single('foto'), async (req, res) => {
   try {
-    const pelanggan = await db.Pelanggan.create(req.body);
+
+    const { nama, email, ktp, alamat, hp } = req.body;
+   
+    const foto = req.file ? req.file.filename : req.body.foto;
+
+  
+    const pelanggan = await db.Pelanggan.create({
+      nama,
+      email,
+      ktp,
+      alamat,
+      hp,
+      foto
+    });
+
     res.status(201).json({ message: 'Pelanggan added successfully', pelanggan });
   } catch (error) {
     console.error('Error adding pelanggan:', error);
     res.status(400).json({ error: 'Failed to add pelanggan', details: error.message });
   }
 });
+
 
 
 
@@ -710,7 +755,7 @@ app.get('/booking/:id', async (req, res) => {
               attributes: ['nama'], 
             },
           ],
-          attributes: ['id', 'nopol', 'id_pelanggan'],
+          attributes: ['id', 'nopol', 'merek', 'id_pelanggan'],
         },
       ],
       attributes: ['id', 'tanggal_booking', 'tanggal_penanganan', 'id_kendaraan', 'keluhan', 'no_antrian', 'waktu', 'status'], 
@@ -809,9 +854,10 @@ app.post('/booking', async (req, res) => {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
- 
-    const formattedDate = moment(tanggal_booking).tz('Asia/Jakarta').format('YYYY-MM-DD');
-
+  
+    const formattedDate = moment(tanggal_booking)
+      .tz('Asia/Jakarta')
+      .format('YYYY-MM-DD');
 
     if (status === "tunggu") {
       waktu = null;
@@ -820,8 +866,16 @@ app.post('/booking', async (req, res) => {
     }
 
 
-    const startOfDayUTC = moment(tanggal_booking).tz('Asia/Jakarta').startOf('day').utc().format('YYYY-MM-DD HH:mm:ss');
-    const endOfDayUTC = moment(tanggal_booking).tz('Asia/Jakarta').endOf('day').utc().format('YYYY-MM-DD HH:mm:ss');
+    const startOfDayUTC = moment(tanggal_booking)
+      .tz('Asia/Jakarta')
+      .startOf('day')
+      .utc()
+      .format('YYYY-MM-DD HH:mm:ss');
+    const endOfDayUTC = moment(tanggal_booking)
+      .tz('Asia/Jakarta')
+      .endOf('day')
+      .utc()
+      .format('YYYY-MM-DD HH:mm:ss');
 
     console.log('Rentang waktu UTC:', startOfDayUTC, 'sampai', endOfDayUTC);
 
@@ -840,7 +894,6 @@ app.post('/booking', async (req, res) => {
       }
     }
 
-    
     const count = await db.Booking.count({
       where: {
         tanggal_booking: {
@@ -851,9 +904,12 @@ app.post('/booking', async (req, res) => {
 
     console.log('Jumlah booking ditemukan untuk tanggal', formattedDate, ':', count);
 
+    if (count >= 9) {
+      return res.status(400).json({ error: `Slot booking sudah penuh untuk tanggal ${formattedDate}` });
+    }
+
     const no_antrian = count + 1;
 
- 
     const newBooking = await db.Booking.create({
       id_kendaraan,
       tanggal_booking: moment(tanggal_booking).tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss'),
@@ -865,12 +921,13 @@ app.post('/booking', async (req, res) => {
     });
 
     res.status(201).json({ message: 'Booking berhasil dibuat', booking: newBooking });
-
   } catch (error) {
     console.error('Gagal membuat booking:', error);
     res.status(500).json({ error: 'Terjadi kesalahan pada server', details: error.message });
   }
 });
+
+
 
 //  Edit Booking
 
@@ -956,7 +1013,7 @@ app.get('/riwayat', async (req, res) => {
           through: {
             attributes: ['harga_jual','harga_beli','jumlah_sparepart']
           },
-          attributes: ['id','nama','jumlah','harga_jual','harga_beli'], 
+          attributes: ['nama','jumlah','harga_jual','harga_beli'], 
         },
         {
           model: db.Karyawan,
@@ -1012,8 +1069,12 @@ app.get('/riwayat/:id', async (req, res) => {
         },
         {
           model: db.Sparepart,
-          as: 'sparepart',
-          attributes: ['id', 'nama', 'jumlah', 'harga_jual'], 
+          as: 'spareparts',
+         
+          through: {
+            attributes: ['harga_jual','harga_beli','jumlah_sparepart']
+          },
+          attributes: ['nama','jumlah','harga_jual','harga_beli'], 
         },
         {
           model: db.Karyawan,
@@ -1120,9 +1181,6 @@ app.post('/riwayat', async (req, res) => {
 });
 
 
-
-
-
 // edit riwayat
 
 app.put('/riwayat/:id', async (req, res) => {
@@ -1151,6 +1209,23 @@ app.put('/riwayat/:id', async (req, res) => {
   }
 });
 
+app.put('/riwayat/:id/status', async (req, res) => {
+  try {
+    const { status } = req.body;
+    console.log("Update status request:", req.params.id, status);
+    const allowedStatuses = ['Belum di bayar', 'Sudah di bayar'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Status tidak valid' });
+    }
+    const riwayat = await db.Riwayat.findByPk(req.params.id);
+    if (!riwayat) return res.status(404).json({ error: 'Riwayat tidak ditemukan' });
+    await riwayat.update({ status });
+    res.json({ message: 'Status berhasil diperbarui', riwayat });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ error: 'Gagal mengupdate status riwayat', details: error.message });
+  }
+});
 
 // hapus data riwayat
 app.delete('/riwayat/:id', async (req, res) => {

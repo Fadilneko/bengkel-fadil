@@ -20,11 +20,6 @@ const User = sequelize.define('user', {
     allowNull: false,
     defaultValue: 0,
   },
-  nama: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    
-  },
 }, {
   tableName : 'user',
 });

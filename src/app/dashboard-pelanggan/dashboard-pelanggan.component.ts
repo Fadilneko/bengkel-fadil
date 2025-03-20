@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SemuaService } from 'src/app/semua.service';
 import { MatDialog } from '@angular/material/dialog';
+import { NotificationService } from 'src/app/notification.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { filter } from 'rxjs/operators';
 import { PopupTambahKendaraanComponent } from '../dashboard-pelanggan/popup-tambah-kendaraan/popup-tambah-kendaraan.component';
 import { PopupBookingComponent } from '../dashboard-pelanggan/popup-booking/popup-booking.component';
 
@@ -17,7 +20,8 @@ export class DashboardPelangganComponent implements OnInit {
   currentSlide = 0;
   slides = [0, 1, 2];
 
-  constructor(private semuaService: SemuaService, private dialog: MatDialog) {}
+  constructor(private semuaService: SemuaService, private dialog: MatDialog,  private notificationService: NotificationService,
+    private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     const pelangganId = localStorage.getItem('pelangganId');
@@ -29,8 +33,38 @@ export class DashboardPelangganComponent implements OnInit {
 
     setInterval(() => {
       this.nextSlide();
-    }, 4000); 
+    }, 4000);
+    
+    if (pelangganId) {
+      const key = `pendingNotification_${pelangganId}`;
+      const pending = localStorage.getItem(key);
+      console.log("Pending notification dari localStorage:", pending);
+      if (pending) {
+        this.snackBar.open(pending, "Tutup", {
+          duration: 3000,
+          horizontalPosition: "center",
+          verticalPosition: "top"
+        });
+        localStorage.removeItem(key);
+      }
+    }
   }
+
+  // ngAfterViewInit() {
+   
+  //   setTimeout(() => {
+  //     const pending = localStorage.getItem('pendingNotification');
+  //     console.log("Pending notification dari localStorage:", pending);
+  //     if (pending) {
+  //       this.snackBar.open(pending, "Tutup", {
+  //         duration: 3000,
+  //         horizontalPosition: "center",
+  //         verticalPosition: "top"
+  //       });
+  //       localStorage.removeItem('pendingNotification');
+  //     }
+  //   }, 100); 
+  // }
 
 
   nextSlide() {

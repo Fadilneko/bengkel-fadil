@@ -10,12 +10,33 @@
           placeholder="Cari riwayat..."
           class="border p-3 rounded-md"
         />
+        <!-- Filter Tanggal (tipe date) -->
         <input
           type="date"
           [(ngModel)]="selectedDate"
           (change)="applyFilters()"
           class="border p-3 rounded-md sm:w-auto"
         />
+        <!-- Filter Bulan (tipe month) -->
+        <input
+          type="month"
+          [(ngModel)]="selectedMonth"
+          (change)="applyFilters()"
+          class="border p-3 rounded-md sm:w-auto"
+        />
+        <!-- Dropdown Filter Pelanggan -->
+        <select [(ngModel)]="selectedCustomerId" (change)="applyFilters()" class="border p-3 rounded-md sm:w-auto">
+          <option value="">-- Semua Pelanggan --</option>
+          <option *ngFor="let option of customerFilterOptions" [value]="option.id">
+            {{ option.name }} ({{ option.count }})
+          </option>
+        </select>
+        <button
+          class="bg-gray-500 text-white p-3 pt-4 rounded-md flex gap-2 hover:bg-gray-600"
+          (click)="filterServiceTerbanyak()"
+        >
+          <mat-icon>filter_list</mat-icon> Service Terbanyak
+        </button>
         <button
           class="bg-red-500 text-white p-4 flex gap-2 hover:bg-red-400 rounded-md"
           (click)="resetFilter()"
@@ -51,6 +72,7 @@
             <th class="border-collapse border font-medium p-2">Harga Jual Sparepart</th>
             <th class="border-collapse border font-medium p-2">Jumlah Sparepart</th>
             <th class="border-collapse border font-medium p-2">Total Harga</th>
+            <th class="border-collapse border font-medium p-2">Status</th>
             <th class="border-collapse border font-medium p-2 w-20">Aksi</th>
           </tr>
         </thead>
@@ -66,6 +88,7 @@
             <td class="border-collapse border p-2">{{ riwayat.kendaraan?.nopol }}</td>
             <td class="border-collapse border p-2">{{ riwayat.jasa?.jenis }}</td>
             <td class="border-collapse border p-2">{{ riwayat.jasa?.harga | currency:'Rp.' }}</td>
+          
            
             <td class="border-collapse border p-2">
               <ul class="list-none p-0 m-0">
@@ -74,7 +97,6 @@
                 </li>
               </ul>
             </td>
-           
             <td class="border-collapse border p-2">
               <ul class="list-none p-0 m-0">
                 <li *ngFor="let sp of riwayat.spareparts">
@@ -82,7 +104,6 @@
                 </li>
               </ul>
             </td>
-           
             <td class="border-collapse border p-2">
               <ul class="list-none p-0 m-0">
                 <li *ngFor="let sp of riwayat.spareparts">
@@ -90,10 +111,19 @@
                 </li>
               </ul>
             </td>
-          
             <td class="border-collapse border p-2">{{ riwayat.total_harga | currency:'Rp.' }}</td>
-          
+            <td class="border-collapse border p-2">{{ riwayat.status }}</td>
+            
             <td class="border-collapse border p-2">
+            
+              <div class="flex gap-2">
+
+                <select [(ngModel)]="riwayat.status" (change)="updateStatus(riwayat)" class="border p-1 rounded">
+                  <option value="Belum di bayar">Belum di bayar</option>
+                  <option value="Sudah di bayar">Sudah di bayar</option>
+                </select>
+              
+              
               <div class="flex justify-center gap-3">
                 <button
                   class="bg-blue-500 text-white p-2 rounded-md w-20 flex justify-center gap-2 hover:bg-blue-400"
@@ -101,41 +131,42 @@
                 >
                   <mat-icon>print</mat-icon>
                 </button>
-               
               </div>
+            </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
 
-  <div class="flex justify-between items-center mt-4">
-    <span class="p-2 text-sm">
-      Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ filteredCount || riwayatList.length }} data
-    </span>
-    <div class="flex gap-2">
-      <button
-        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
-        (click)="previousPage()"
-        [disabled]="currentPage === 1"
-      >
-        <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
-      </button>
-      <button
-        *ngFor="let page of getPages()"
-        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
-        [class.bg-blue-500]="page === currentPage"
-        (click)="goToPage(page)"
-      >
-        {{ page }}
-      </button>
-      <button
-        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
-        (click)="nextPage()"
-        [disabled]="currentPage >= totalPages()"
-      >
-        <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
-      </button>
+    <div class="flex justify-between items-center mt-4">
+      <span class="p-2 text-sm">
+        Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ riwayatList.length }} data
+      </span>
+      <div class="flex gap-2">
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_left</mat-icon>
+        </button>
+        <button
+          *ngFor="let page of getPages()"
+          class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
+          [class.bg-blue-500]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+        <button
+          class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+          (click)="nextPage()"
+          [disabled]="currentPage >= totalPages()"
+        >
+          <mat-icon class="mt-1">keyboard_arrow_right</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
+</div>

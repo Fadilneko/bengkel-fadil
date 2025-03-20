@@ -9,6 +9,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -38,6 +39,8 @@ import { PopupBookingComponent } from './dashboard-pelanggan/popup-booking/popup
 import { BookingComponent } from './dashboard-pelanggan/booking/booking.component';
 import { RiwayatComponent } from './dashboard-pelanggan/riwayat/riwayat.component';
 import { DetailRiwayatComponent } from './dashboard-pelanggan/detail-riwayat/detail-riwayat.component';
+import { DetailBookingComponent } from './dashboard-pelanggan/detail-booking/detail-booking.component';
+
 
 
 
@@ -59,6 +62,7 @@ import { DetailRiwayatComponent } from './dashboard-pelanggan/detail-riwayat/det
     PopupBookingComponent,
     RiwayatComponent,
     DetailRiwayatComponent,
+    DetailBookingComponent,
 
   
  
@@ -77,6 +81,7 @@ import { DetailRiwayatComponent } from './dashboard-pelanggan/detail-riwayat/det
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
+    MatSnackBarModule,
 
 
    

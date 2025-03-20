@@ -9,8 +9,8 @@
         <input
           type="text"
           [(ngModel)]="searchQuery"
-          placeholder="Cari Nama Karyawan..."
-          class="border p-3 rounded-md sm:w-30 w-full"
+          placeholder="Cari Nama..."
+          class="border p-3 rounded-md"
         />
       </div>
       <button
@@ -50,7 +50,7 @@
                 *ngIf="karyawan.foto"
                 [src]="'assets/' + karyawan.foto"
                 alt="Foto Karyawan"
-                class="w-10 h-10"
+                class="h-14 w-14 border rounded-full"
               />
             </div>
           </td>
@@ -79,8 +79,7 @@
 
   <div class="flex justify-between items-center mt-4">
     <span class="p-2 text-sm">
-      Menampilkan {{ startItem() }} - {{ endItem() }} dari
-      {{ karyawanList.length }} data
+      Menampilkan {{ startItem() }} - {{ endItem() }} dari {{ karyawanList.length }} data
     </span>
     <div class="flex gap-2">
       <button
@@ -93,7 +92,7 @@
 
       <button
         *ngFor="let page of getPages()"
-        class="bg-gray-400 h-10 text-white px-3 rounded-md hover:bg-gray-300 hover:text-black"
+        class="h-10 px-3 rounded-md bg-gray-400 text-white hover:bg-gray-300 hover:text-black"
         (click)="goToPage(page)"
       >
         {{ page }}

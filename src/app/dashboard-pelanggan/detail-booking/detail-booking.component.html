@@ -1,0 +1,28 @@
+<div class="relative p-6 border border-gray-700 shadow-lg bg-gray-800 text-white">
+  
+    <button (click)="close()" class="absolute top-2 right-2 text-white hover:text-gray-300 focus:outline-none">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="text-center text-2xl font-bold mb-6">Detail Booking</h2>
+    <div class="space-y-4">
+      <p class="text-lg">
+        No Polisi: <span class="font-semibold">{{ data.kendaraan.nopol }}</span>
+      </p>
+      <p class="text-lg">
+        Merek: <span class="font-semibold">{{ data.kendaraan.merek }}</span>
+      </p>
+      <p class="text-lg">
+        Status: <span class="font-semibold">{{ data.status }}</span>
+      </p>
+      <p class="text-lg">
+        Waktu Datang: <span class="font-semibold">{{ data.waktu }}</span>
+      </p>
+      <p class="text-lg">
+        No Antrian: <span class="font-semibold">{{ data.no_antrian }}</span>
+      </p>
+      <p class="text-lg">
+        Tanggal: <span class="font-semibold">{{ data.tanggal_booking }}</span>
+      </p>
+    </div>
+  </div>
+  

@@ -4,9 +4,11 @@
   </h2>
 
   <div class="w-full mb-4">
-      <label for="tanggal">Tanggal Selesai:</label>
-      <input type="date" id="tanggal" [(ngModel)]="riwayat.tanggal" class="border p-2 w-full" required />
+    <label for="tanggal">Tanggal Selesai:</label>
+    <input type="date" id="tanggal" [(ngModel)]="riwayat.tanggal" class="border p-2 w-full bg-gray-100" required readonly />
   </div>
+  
+  
 
   <div class="w-full mb-4">
       <label for="keluhan">Keluhan:</label>
@@ -40,7 +42,7 @@
   </div>
 
   <div class="mb-4">
-      <label for="karyawan" class="block text-sm font-medium text-gray-700">Pilih Karyawan</label>
+      <label for="karyawan" class="block text-sm font-medium text-gray-700">Pilih Teknisi</label>
       <select id="karyawan" [(ngModel)]="riwayat.id_karyawan" class="mt-1 block w-full p-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
           <option *ngFor="let karyawan of karyawanList" [value]="karyawan.id">
               {{ karyawan.nama }}
@@ -108,12 +110,9 @@
 
   <div class="mb-4">
     <label for="status">Status:</label>
-    <select id="status" [(ngModel)]="riwayat.status" class="border p-2 w-full">
-      <option value="tunggu">Tunggu</option>
-      <option value="setuju">Setuju</option>
-      <option value="belum di kerjakan">Belum Di Kerjakan</option>
-      <option value="di kerjakan">Di Kerjakan</option>
-      <option value="selesai">Selesai</option>
+    <select id="status" [(ngModel)]="riwayat.status" class="border p-2 w-full">  
+      <option value="Belum Di Bayar">Belum Di Bayar</option>
+      <option value="Sudah Di Bayar">Sudah Di Bayar</option>
     </select>
   </div>
 

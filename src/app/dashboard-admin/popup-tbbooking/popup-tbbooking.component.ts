@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { SemuaService } from 'src/app/semua.service';
 import { PopupKonfirmasiComponent } from '../popup-konfirmasi/popup-konfirmasi.component';
+import { NotificationService } from 'src/app/notification.service';
 
 @Component({
   selector: 'app-popup-tbbooking',
@@ -17,6 +19,8 @@ export class PopupTbbookingComponent {
     private service: SemuaService,
     public dialogRef: MatDialogRef<PopupTbbookingComponent>,
     private dialog: MatDialog,
+    private router: Router,
+    private notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (data) this.booking = { ...data };
@@ -180,10 +184,16 @@ export class PopupTbbookingComponent {
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        const pelangganId = localStorage.getItem('pelangganId');
         if (dataToSend.id) {
           this.service.editBooking(dataToSend.id, dataToSend).subscribe(
             (res) => {
               console.log('✅ Booking berhasil diperbarui:', res);
+    
+              const message = "Status booking telah diperbarui. Silakan cek jadwal service Anda.";
+              if (pelangganId) {
+                localStorage.setItem(`pendingNotification_${pelangganId}`, message);
+              }
               this.dialogRef.close(true);
             },
             (error) => {

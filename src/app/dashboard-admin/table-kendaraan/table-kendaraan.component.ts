@@ -71,58 +71,69 @@ export class TableKendaraanComponent implements OnInit {
   }
 
 
-  filteredData() {
-    let filtered = this.kendaraanList.filter(k =>
-      k.nopol.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      k.merek.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-
+  get filteredList(): any[] {
+    let filtered = this.kendaraanList;
+  
+  
+    if (this.searchQuery) {
+      filtered = filtered.filter(item =>
+        item.nopol.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        item.merek.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
     
-
-    return filtered.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage);
+  
+    // if (this.filterStartDate) {
+    //   filtered = filtered.filter(booking => {
+    //     const bookingDate = new Date(booking.tanggal_booking);
+    //     return bookingDate >= new Date(this.filterStartDate);
+    //   });
+    // }
+    
+   
+    
+    return filtered;
   }
-
+  
+  
+  filteredData() {
+    const filtered = this.filteredList;
+    return filtered.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
+    );
+  }
+  
   totalPages(): number {
-    return Math.ceil(this.kendaraanList.length / this.itemsPerPage);
+    return Math.ceil(this.filteredList.length / this.itemsPerPage);
   }
-  
-
+    
   startItem(): number {
-    return (this.currentPage - 1) * this.itemsPerPage + 1;
+    return this.filteredList.length ? (this.currentPage - 1) * this.itemsPerPage + 1 : 0;
   }
-  
-
+    
   endItem(): number {
-    return Math.min(this.currentPage * this.itemsPerPage, this.kendaraanList.length);
+    return Math.min(this.currentPage * this.itemsPerPage, this.filteredList.length);
   }
-  
-
+    
   getPages(): number[] {
     return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
   }
-  
-
+    
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-  
-
+    
   nextPage(): void {
     if (this.currentPage < this.totalPages()) {
       this.currentPage++;
     }
   }
-  
-
+    
   goToPage(page: number): void {
     this.currentPage = page;
   }
   
-
-  getPaginatedData(): any[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.kendaraanList.slice(startIndex, startIndex + this.itemsPerPage);
-  }
 }

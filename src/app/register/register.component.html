@@ -42,12 +42,11 @@
   
         <button
           type="submit"
-          [disabled]="isLoading"
           class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           Register
         </button>
-        <div *ngIf="isLoading" class="text-center text-blue-500">Loading...</div>
+  
       </form>
   
       <p *ngIf="message" class="text-center text-red-500">{{ message }}</p>

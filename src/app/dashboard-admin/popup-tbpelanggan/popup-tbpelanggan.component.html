@@ -37,7 +37,7 @@
 
   <div class="mb-2">
     <label>Foto:</label>
-    <input type="file" [(ngModel)]="pelanggan.foto" class="border p-2 w-full">
+    <input type="file" (change)="onFileSelected($event)" class="border p-2 w-full">
   </div>
 
 <div class="flex justify-end gap-2 mt-4">

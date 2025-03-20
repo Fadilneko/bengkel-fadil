@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { SemuaService } from 'src/app/semua.service';
 import { EventEmitter, Output } from '@angular/core';
 import { PopupKonfirmasiComponent } from '../popup-konfirmasi/popup-konfirmasi.component';
-
+import { NotificationService } from 'src/app/notification.service';
 
 
 @Component({
@@ -32,6 +32,7 @@ export class PopupTbriwayatComponent implements OnInit {
     private service: SemuaService,
     public dialogRef: MatDialogRef<PopupTbriwayatComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private notificationService: NotificationService,
     private dialog: MatDialog,
     
   ) {
@@ -46,7 +47,7 @@ export class PopupTbriwayatComponent implements OnInit {
       nama_pelanggan: data.kendaraan?.pelanggan?.nama || '',
       id_kendaraan: data.id_kendaraan,
       nopol: data.kendaraan?.nopol || '',
-      tanggal: '',
+      tanggal: data.tanggal_penanganan || '',
       keluhan: data.keluhan || '',
       penanganan: '',
       catatan: '',
@@ -290,7 +291,7 @@ export class PopupTbriwayatComponent implements OnInit {
     });
   }
 
-  // Hapus baris sparepart (minimal harus ada 1 baris)
+
   removeSparepartRow(index: number) {
     if (this.sparepartsForm.length > 1) {
       this.sparepartsForm.splice(index, 1);
@@ -384,6 +385,9 @@ simpan() {
                 this.dialogRef.close(true);
     
                 console.log("📢 ID Booking yang akan dihapus:", this.riwayat.id_booking);
+              // const message = "Service anda sudah selesai. Silakan cek Daftar Service Anda.";
+              // this.notificationService.notify(message);
+              // localStorage.setItem('pendingNotification', message);
                 this.hapusBooking(this.riwayat.id_booking);
               },
               error => {

@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 interface LoginResponse {
   id?: string;
@@ -32,6 +33,24 @@ export class SemuaService {
       })
     );
   }
+
+  checkEmail(email: string): Observable<any> {
+    return this.http.get(`${this.apiURL}/check-email?email=${encodeURIComponent(email)}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Check email failed', error);
+        return throwError(() => new Error('Check email failed'));
+      })
+    );
+  }
+
+
+  checkEmailAvailability(email: string): Observable<boolean> {
+    return this.checkEmail(email).pipe(
+      map(response => response.exists)
+    );
+  }
+
+  
 
   login(user: { email: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiURL}/login`, user, { withCredentials: true });
@@ -375,6 +394,16 @@ export class SemuaService {
       })
     );
   }
+
+  updateStatusRiwayat(id: number, status: string): Observable<any> {
+    return this.http.put(`${this.apiURL}/riwayat/${id}/status`, { status }, { withCredentials: true }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Gagal mengupdate status riwayat:', error);
+        return throwError(() => new Error(error.message || 'Gagal mengupdate status riwayat'));
+      })
+    );
+  }
+  
 
   hapusRiwayat(id: number): Observable<any> {
     return this.http.delete(`${this.apiURL}/riwayat/${id}`).pipe(

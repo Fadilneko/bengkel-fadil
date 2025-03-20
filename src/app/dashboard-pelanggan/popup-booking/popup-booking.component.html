@@ -1,51 +1,53 @@
 <div class="p-5">
-    <h2 class="text-xl font-medium mb-4 text-center">
-      {{ booking.id ? 'Edit Booking' : 'Tambah Booking' }}
-    </h2>
-  
-    <div class="flex gap-2">
-      <div class="w-full mb-4">
-        <label for="tanggalBooking">Tanggal Booking:</label>
-        <input type="date" id="tanggalBooking" [(ngModel)]="booking.tanggal_booking" 
-          (change)="onTanggalBookingChange()" class="border p-2 w-full" />
-      </div>
-    </div>
-  
-    <div class="w-full mb-4">
-      <label for="keluhan">Keluhan:</label>
-      <textarea id="keluhan" [(ngModel)]="booking.keluhan" class="border p-2 w-full"></textarea>
-    </div>
-  
-    <div class="w-full mb-4">
-      <label>Nama Pelanggan:</label>
-      <input type="text" class="w-full px-4 py-2 border rounded-md bg-gray-100 text-gray-700"
-        [(ngModel)]="booking.nama_pelanggan" disabled />
-    </div>
-  
-    <div class="w-full mb-4">
-      <label for="noPolisi">No Polisi:</label>
-      
-      
-      <div *ngIf="booking.id; else kendaraanDropdown">
-        <p id="noPolisi" class="border p-2 w-full bg-gray-100">
-          {{ booking.kendaraan?.nopol || 'Tidak Ditemukan' }}
-        </p>
-      </div>
-  
-      
-      <ng-template #kendaraanDropdown>
-        <select id="kendaraan" [(ngModel)]="booking.id_kendaraan" 
-          class="border p-2 rounded w-full bg-white text-black">
-          <option *ngFor="let kendaraan of kendaraanList" [value]="kendaraan.id">
-            {{ kendaraan.nopol }}
-          </option>
-        </select>
-      </ng-template>
-    </div>
-  
-    <div class="flex justify-end gap-2 mt-4">
-      <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
-      <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
-    </div>
+  <h2 class="text-xl font-medium mb-4 text-center">
+    {{ booking.id ? 'Edit Booking' : 'Tambah Booking' }}
+  </h2>
+
+  <div *ngIf="errorMessage" class="bg-red-100 text-red-700 p-3 mb-4 rounded">
+    {{ errorMessage }}
   </div>
   
+  <div class="w-full mb-4">
+    <label for="tanggalBooking">Tanggal Booking:</label>
+    <input type="date" id="tanggalBooking" [(ngModel)]="booking.tanggal_booking" 
+      (change)="onTanggalBookingChange()" class="border p-2 w-full" 
+      [min]="minDate" />
+  </div>
+  
+  <div class="w-full mb-4">
+    <label for="keluhan">Keluhan:</label>
+    <textarea id="keluhan" [(ngModel)]="booking.keluhan" class="border p-2 w-full"></textarea>
+  </div>
+  
+  <div class="w-full mb-4">
+    <label>Nama Pelanggan:</label>
+    <input type="text" class="w-full px-4 py-2 border rounded-md bg-gray-100 text-gray-700"
+      [(ngModel)]="booking.nama_pelanggan" disabled />
+  </div>
+  
+  <div class="w-full mb-4">
+    <label for="noPolisi">No Polisi:</label>
+   
+    <div *ngIf="booking.id; else kendaraanDropdown">
+      <p id="noPolisi" class="border p-2 w-full bg-gray-100">
+        {{ booking.kendaraan?.nopol || 'Tidak Ditemukan' }}
+      </p>
+    </div>
+    
+   
+    <ng-template #kendaraanDropdown>
+      <select id="kendaraan" [(ngModel)]="booking.id_kendaraan" 
+        class="border p-2 rounded w-full bg-white text-black">
+        <option value="" disabled selected>Pilih Kendaraan</option>
+        <option *ngFor="let kendaraan of kendaraanList" [value]="kendaraan.id">
+          {{ kendaraan.nopol }}
+        </option>
+      </select>
+    </ng-template>
+  </div>
+  
+  <div class="flex justify-end gap-2 mt-4">
+    <button class="bg-gray-400 text-white p-2 rounded-md" (click)="dialogRef.close()">Batal</button>
+    <button class="bg-blue-500 text-white p-2 rounded-md" (click)="simpan()">Simpan</button>
+  </div>
+</div>
